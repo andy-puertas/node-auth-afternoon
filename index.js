@@ -30,12 +30,14 @@ passport.use( new Auth0Strategy({
 }))
 
 passport.serializeUser( (user, done) => {
-    done(null, {clientID: user.id, email: user._.json.email, name: user._json.name})
+    done(null, {clientID: user.id, email: user._json.email, name: user._json.name})
 });
 
 passport.deserializeUser( (obj, done) => {
     done(null, obj)
 });
+
+
 
 app.get('/login',
     passport.authenticate('auth0', 
@@ -43,9 +45,17 @@ app.get('/login',
     )
 );
 
-app.get('/students', (req, res, next) => {
+function authenticated(req, res, next) {
+    if( req.user ) {
+      next()
+    } else {
+      res.sendStatus(401);
+    }
+  }
+
+app.get('/students', authenticated, (req, res, next) => {
     res.status(200).send(students)
-})
+});
 
 
 
