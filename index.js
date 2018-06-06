@@ -28,6 +28,19 @@ passport.use( new Auth0Strategy({
     done(null, profile)
 }))
 
+passport.serializeUser( (user, done) => {
+    done(null, {clientID: user.id, email: user._.json.email, name: user._json.name})
+});
+
+passport.deserializeUser( (obj, done) => {
+    done(null, obj)
+});
+
+app.get('/login',
+    passport.authenticate('auth0', 
+        {successRedirect: '/students', failureRedirect: '/login', connection: 'github' }
+    )
+);
 
 
 
