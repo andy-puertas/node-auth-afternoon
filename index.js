@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const Auth0Strategy = require('passport-auth0');
 const passport = require('passport');
+const students = require('./students.json');
 
 const app = express();
 
@@ -41,6 +42,10 @@ app.get('/login',
         {successRedirect: '/students', failureRedirect: '/login', connection: 'github' }
     )
 );
+
+app.get('/students', (req, res, next) => {
+    res.status(200).send(students)
+})
 
 
 
